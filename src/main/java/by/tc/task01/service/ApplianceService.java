@@ -7,6 +7,6 @@ import by.tc.task01.entity.criteria.Criteria;
 import java.util.ArrayList;
 
 public interface ApplianceService {
-	Appliance find(Criteria criteria) throws NoApplianceException;
-	ArrayList<Appliance> findAll(Criteria criteria);
+	Appliance find(Criteria criteria) throws Exception;
+	ArrayList<Appliance> findAll(Criteria criteria) throws Exception;
 }

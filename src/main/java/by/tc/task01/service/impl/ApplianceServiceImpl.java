@@ -12,24 +12,28 @@ import java.util.ArrayList;
 
 public class ApplianceServiceImpl implements ApplianceService{
 
-	public Appliance find(Criteria criteria) throws NoApplianceException {
+	public Appliance find(Criteria criteria) throws Exception {
 		DAOFactory factory = DAOFactory.getInstance();
 		ApplianceDAO applianceDAO = factory.getApplianceDAO();
 		Appliance appliance = null;
 		try {
 			appliance = applianceDAO.find(criteria);
 		}
-		catch (NoApplianceException e) {
+		catch (Exception e) {
 			throw e;
 		}
 
 		return appliance;
 	}
 
-	public ArrayList<Appliance> findAll(Criteria criteria){
+	public ArrayList<Appliance> findAll(Criteria criteria) throws Exception {
 		DAOFactory factory = DAOFactory.getInstance();
 		ApplianceDAO applianceDAO = factory.getApplianceDAO();
 
-		return applianceDAO.findAll(criteria);
+		try {
+			return applianceDAO.findAll(criteria);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 }

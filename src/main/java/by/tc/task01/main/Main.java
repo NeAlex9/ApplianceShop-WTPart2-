@@ -19,7 +19,6 @@ public class Main {
 		ServiceFactory factory = ServiceFactory.getInstance();
 		ApplianceService service = factory.getApplianceService();
 		var dao = DAOFactory.getInstance().getApplianceDAO();
-		dao.saveAppliance("ApplianceInfo.xml");
 
 		//////////////////////////////////////////////////////////////////
 
@@ -29,7 +28,7 @@ public class Main {
 		try {
 			appliance = service.find(criteriaOven);
 			PrintApplianceInfo.print(appliance);
-		} catch (NoApplianceException e) {
+		} catch (Exception e) {
 			System.out.println("No appliance with such criteria");
 		}
 
@@ -42,7 +41,7 @@ public class Main {
 		try {
 			appliance = service.find(criteriaOven);
 			PrintApplianceInfo.print(appliance);
-		} catch (NoApplianceException e) {
+		} catch (Exception e) {
 			System.out.println("No appliance with such criteria");
 		}
 	}

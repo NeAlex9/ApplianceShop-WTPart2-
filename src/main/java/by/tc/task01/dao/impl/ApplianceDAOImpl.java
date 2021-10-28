@@ -2,18 +2,36 @@ package by.tc.task01.dao.impl;
 
 import by.tc.task01.dao.ApplianceDAO;
 import by.tc.task01.dao.impl.exceptions.NoApplianceException;
-import by.tc.task01.entity.Appliance;
-import by.tc.task01.entity.Laptop;
-import by.tc.task01.entity.Oven;
-import by.tc.task01.entity.Refrigerator;
+import by.tc.task01.entity.*;
 import by.tc.task01.entity.criteria.Criteria;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ApplianceDAOImpl implements ApplianceDAO {
 
-    private ArrayList<Appliance> Appliances;
+    private final String Path = "";
+    private List<Appliance> Appliances;
+    private DocumentBuilder DocumentBuilder;
+
+    public ApplianceDAOImpl() {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            this.DocumentBuilder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
 
     private Boolean haveProperty(Map<String, Object> applianceProperties, Map.Entry<String, Object> criteriaProp) {
         for (var property : applianceProperties.entrySet()) {
@@ -41,19 +59,51 @@ public class ApplianceDAOImpl implements ApplianceDAO {
         return false;
     }
 
-    private void loadAppliance(String path) {
-        /*XmlMapper xmlMapper = new XmlMapper();
-        xmlMapper.writeValue(new File("simple_bean.xml"), new SimpleBean());
-        File file = new File("simple_bean.xml");*/
+    private void LoadAppliance(String path) throws Exception {
+        List<Appliance> appliances = new ArrayList<>();
+        NodeList applianceNodeList = parseXml();
+        ApplianceFactory factory = ApplianceFactory.getInstance();
+        String applianceType;
+        for (int i = 0; i < applianceNodeList.getLength(); i++) {
+            Node node = applianceNodeList.item(i);
+            if (node.getNodeType() == node.ELEMENT_NODE) {
+                Element applianceElement = (Element) node;
+                applianceType = applianceElement.getTagName();
+                Appliance appliance = factory.getAppliance(applianceType, applianceElement);
+                appliances.add(appliance);
+            }
+        }
+
+        this.Appliances = appliances;
+    }
+
+    private NodeList parseXml() throws Exception {
+        Document document;
+        Element root;
+        try {
+            document = this.DocumentBuilder.parse(this.Path);
+            root = document.getDocumentElement();
+        } catch (IOException e) {
+            System.err.printf("Error while reading file %s. %s%n", this.Path, e.getMessage());
+            throw new Exception("Error while reading file %s. %s%n" + this.Path, e);
+        } catch (SAXException e) {
+            System.err.printf("Error while parsing file %s. %s%n", this.Path, e.getMessage());
+            throw new Exception("Error while parsing file %s. %s%n" + this.Path, e);
+        }
+        return root.getChildNodes();
     }
 
     @Override
-    public Appliance find(Criteria criteria) throws NoApplianceException {
+    public Appliance find(Criteria criteria) throws Exception {
+        if (this.Appliances == null){
+            LoadAppliance("");
+        }
+
         var appliances = findAll(criteria);
         if (appliances.size() > 0) {
             return appliances.get(0);
         } else {
-            throw new NoApplianceException("");
+            throw new NoApplianceException("no appliance found");
         }
     }
 
@@ -63,7 +113,11 @@ public class ApplianceDAOImpl implements ApplianceDAO {
     }
 
     @Override
-    public ArrayList<Appliance> findAll(Criteria criteria) {
+    public ArrayList<Appliance> findAll(Criteria criteria) throws Exception {
+        if (this.Appliances == null){
+            LoadAppliance("");
+        }
+
         var appliances = new ArrayList<Appliance>();
         for (var appliance : this.Appliances) {
             if (isSameAppliance(appliance, criteria)) {
@@ -72,9 +126,5 @@ public class ApplianceDAOImpl implements ApplianceDAO {
         }
 
         return appliances;
-    }
-
-    public ArrayList<Appliance> getAppliances() {
-        return Appliances;
     }
 }

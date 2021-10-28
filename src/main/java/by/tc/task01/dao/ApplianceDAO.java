@@ -7,7 +7,7 @@ import by.tc.task01.entity.criteria.Criteria;
 import java.util.ArrayList;
 
 public interface ApplianceDAO {
-	Appliance find(Criteria criteria) throws NoApplianceException;
+	Appliance find(Criteria criteria) throws Exception;
 	Appliance findCheapest(int price);
-	ArrayList<Appliance> findAll(Criteria criteria);
+	ArrayList<Appliance> findAll(Criteria criteria) throws Exception;
 }
