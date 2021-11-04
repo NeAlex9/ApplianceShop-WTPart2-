@@ -1,11 +1,13 @@
 package by.tc.task01.entity;
 
+import by.tc.task01.dao.impl.exceptions.ApplianceException;
 import by.tc.task01.entity.criteria.SearchCriteria;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.sql.Ref;
+import java.util.Locale;
 
 public class ApplianceFactory {
     private static final ApplianceFactory instance = new ApplianceFactory();
@@ -17,13 +19,13 @@ public class ApplianceFactory {
     private ApplianceFactory() {
     }
 
-    public Appliance getAppliance(String applianceType, Object element) throws Exception {
+    public Appliance getAppliance(String applianceType, Object element) throws ApplianceException {
         Appliance appliance;
         if (element.getClass().getSimpleName().equals("DeferredElementImpl")) {
             appliance = getApplianceFromXml(applianceType, (Element) element);
         } else {
             System.err.println("Invalid format");
-            throw new Exception("Invalid format");
+            throw new ApplianceException("Invalid format");
         }
         return appliance;
     }
@@ -31,13 +33,13 @@ public class ApplianceFactory {
     private Appliance getApplianceFromXml(String applianceType, Element element) {
         Appliance appliance;
         switch (applianceType) {
-            case "OVEN" -> {
+            case "oven" -> {
                 appliance = (Oven) createOven(element);
             }
-            case "LAPTOP" -> {
+            case "laptop" -> {
                 appliance = (Laptop) createLaptop(element);
             }
-            case "REFRIGERATOR" -> {
+            case "refrigerator" -> {
                 appliance = (Refrigerator) createRefrigerator(element);
             }
             default -> {
@@ -49,26 +51,26 @@ public class ApplianceFactory {
     }
 
     private Appliance createLaptop(Element element) {
-        var price = Integer.parseInt(getElementTextContent(element, SearchCriteria.Laptop.PRICE.toString()));
-        var sysMemory = Integer.parseInt(getElementTextContent(element, SearchCriteria.Laptop.SYSTEM_MEMORY.toString()));
-        var cpu = getElementTextContent(element, SearchCriteria.Laptop.CPU.toString());
+        var price = Integer.parseInt(getElementTextContent(element, SearchCriteria.Laptop.PRICE.toString().toLowerCase()));
+        var sysMemory = Integer.parseInt(getElementTextContent(element, SearchCriteria.Laptop.SYSTEM_MEMORY.toString().toLowerCase()));
+        var cpu = getElementTextContent(element, SearchCriteria.Laptop.CPU.toString().toLowerCase());
         return new Laptop(sysMemory, price, cpu);
     }
 
     private Appliance createOven(Element element) {
-        var price = Integer.parseInt(getElementTextContent(element, SearchCriteria.Laptop.PRICE.toString()));
-        var capacity = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.CAPACITY.toString()));
-        var depth = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.DEPTH.toString()));
-        var height = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.HEIGHT.toString()));
-        var width = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.WIDTH.toString()));
+        var price = Integer.parseInt(getElementTextContent(element, SearchCriteria.Laptop.PRICE.toString().toLowerCase()));
+        var capacity = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.CAPACITY.toString().toLowerCase()));
+        var depth = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.DEPTH.toString().toLowerCase()));
+        var height = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.HEIGHT.toString().toLowerCase()));
+        var width = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.WIDTH.toString().toLowerCase()));
         return new Oven(capacity, depth, width, price, height);
     }
 
     private Appliance createRefrigerator(Element element) {
-        var price = Integer.parseInt(getElementTextContent(element, SearchCriteria.Refrigerator.PRICE.toString()));
-        var width = Integer.parseInt(getElementTextContent(element, SearchCriteria.Refrigerator.WIDTH.toString()));
-        var height = Integer.parseInt(getElementTextContent(element, SearchCriteria.Refrigerator.HEIGHT.toString()));
-        var capacity = Integer.parseInt(getElementTextContent(element, SearchCriteria.Refrigerator.OVERALL_CAPACITY.toString()));
+        var price = Integer.parseInt(getElementTextContent(element, SearchCriteria.Refrigerator.PRICE.toString().toLowerCase()));
+        var width = Integer.parseInt(getElementTextContent(element, SearchCriteria.Refrigerator.WIDTH.toString().toLowerCase()));
+        var height = Integer.parseInt(getElementTextContent(element, SearchCriteria.Refrigerator.HEIGHT.toString().toLowerCase()));
+        var capacity = Integer.parseInt(getElementTextContent(element, SearchCriteria.Refrigerator.OVERALL_CAPACITY.toString().toLowerCase()));
         return new Refrigerator(price, capacity, height, width);
     }
 

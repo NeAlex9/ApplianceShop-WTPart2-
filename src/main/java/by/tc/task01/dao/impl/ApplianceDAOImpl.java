@@ -1,7 +1,7 @@
 package by.tc.task01.dao.impl;
 
 import by.tc.task01.dao.ApplianceDAO;
-import by.tc.task01.dao.impl.exceptions.NoApplianceException;
+import by.tc.task01.dao.impl.exceptions.ApplianceException;
 import by.tc.task01.entity.*;
 import by.tc.task01.entity.criteria.Criteria;
 import org.w3c.dom.Document;
@@ -20,11 +20,12 @@ import java.util.Map;
 
 public class ApplianceDAOImpl implements ApplianceDAO {
 
-    private final String Path = "";
+    private final String Path;
     private List<Appliance> Appliances;
     private DocumentBuilder DocumentBuilder;
 
     public ApplianceDAOImpl() {
+        this.Path = "ApplianceInfo.xml";
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             this.DocumentBuilder = factory.newDocumentBuilder();
@@ -59,7 +60,7 @@ public class ApplianceDAOImpl implements ApplianceDAO {
         return false;
     }
 
-    private void LoadAppliance(String path) throws Exception {
+    private void LoadAppliance() throws ApplianceException {
         List<Appliance> appliances = new ArrayList<>();
         NodeList applianceNodeList = parseXml();
         ApplianceFactory factory = ApplianceFactory.getInstance();
@@ -77,7 +78,7 @@ public class ApplianceDAOImpl implements ApplianceDAO {
         this.Appliances = appliances;
     }
 
-    private NodeList parseXml() throws Exception {
+    private NodeList parseXml() throws ApplianceException {
         Document document;
         Element root;
         try {
@@ -85,25 +86,26 @@ public class ApplianceDAOImpl implements ApplianceDAO {
             root = document.getDocumentElement();
         } catch (IOException e) {
             System.err.printf("Error while reading file %s. %s%n", this.Path, e.getMessage());
-            throw new Exception("Error while reading file %s. %s%n" + this.Path, e);
+            throw new ApplianceException("Error while reading file %s. %s%n" + this.Path, e);
         } catch (SAXException e) {
             System.err.printf("Error while parsing file %s. %s%n", this.Path, e.getMessage());
-            throw new Exception("Error while parsing file %s. %s%n" + this.Path, e);
+            throw new ApplianceException("Error while parsing file %s. %s%n" + this.Path, e);
         }
+
         return root.getChildNodes();
     }
 
     @Override
-    public Appliance find(Criteria criteria) throws Exception {
-        if (this.Appliances == null){
-            LoadAppliance("");
+    public Appliance find(Criteria criteria) throws ApplianceException {
+        if (this.Appliances == null) {
+            LoadAppliance();
         }
 
         var appliances = findAll(criteria);
         if (appliances.size() > 0) {
             return appliances.get(0);
         } else {
-            throw new NoApplianceException("no appliance found");
+            throw new ApplianceException("no appliance found");
         }
     }
 
@@ -113,9 +115,9 @@ public class ApplianceDAOImpl implements ApplianceDAO {
     }
 
     @Override
-    public ArrayList<Appliance> findAll(Criteria criteria) throws Exception {
-        if (this.Appliances == null){
-            LoadAppliance("");
+    public ArrayList<Appliance> findAll(Criteria criteria) throws ApplianceException {
+        if (this.Appliances == null) {
+            LoadAppliance();
         }
 
         var appliances = new ArrayList<Appliance>();
