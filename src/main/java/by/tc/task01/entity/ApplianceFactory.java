@@ -9,9 +9,15 @@ import org.w3c.dom.NodeList;
 import java.sql.Ref;
 import java.util.Locale;
 
+/**
+ * Factory for creating appliance.
+ */
 public class ApplianceFactory {
     private static final ApplianceFactory instance = new ApplianceFactory();
 
+    /**
+     * The constant instance.
+     */
     public static ApplianceFactory getInstance() {
         return instance;
     }
@@ -19,6 +25,13 @@ public class ApplianceFactory {
     private ApplianceFactory() {
     }
 
+    /**
+     * gets appliance instance.
+     * @param applianceType the type of creating appliance.
+     * @param element which appliance properties are got from.
+     * @return appliance
+     * @throws ApplianceException whether the document format is invalid
+     */
     public Appliance getAppliance(String applianceType, Object element) throws ApplianceException {
         Appliance appliance;
         if (element.getClass().getSimpleName().equals("DeferredElementImpl")) {
@@ -58,7 +71,7 @@ public class ApplianceFactory {
     }
 
     private Appliance createOven(Element element) {
-        var price = Integer.parseInt(getElementTextContent(element, SearchCriteria.Laptop.PRICE.toString().toLowerCase()));
+        var price = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.PRICE.toString().toLowerCase()));
         var capacity = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.CAPACITY.toString().toLowerCase()));
         var depth = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.DEPTH.toString().toLowerCase()));
         var height = Integer.parseInt(getElementTextContent(element, SearchCriteria.Oven.HEIGHT.toString().toLowerCase()));

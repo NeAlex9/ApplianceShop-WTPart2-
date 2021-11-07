@@ -9,8 +9,17 @@ import by.tc.task01.service.ApplianceService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Appliance service.
+ */
 public class ApplianceServiceImpl implements ApplianceService{
 
+	/**
+	 * gets all appliances satisfy category.
+	 * @param category name of category looking for.
+	 * @return appliances with satisfy category.
+	 * @throws ApplianceException  whether no appliances of the category.
+	 */
 	@Override
 	public List<Appliance> findByCategory(String category) throws ApplianceException {
 		DAOFactory factory = DAOFactory.getInstance();
@@ -23,6 +32,11 @@ public class ApplianceServiceImpl implements ApplianceService{
 		}
 	}
 
+	/**
+	 *
+	 * @return
+	 * @throws ApplianceException
+	 */
 	@Override
 	public List<Appliance> findCheapest() throws ApplianceException {
 		DAOFactory factory = DAOFactory.getInstance();

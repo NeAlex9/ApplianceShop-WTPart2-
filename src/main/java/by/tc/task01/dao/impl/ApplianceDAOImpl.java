@@ -16,12 +16,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO class for xml files with appliances.
+ */
 public class ApplianceDAOImpl implements ApplianceDAO {
 
     private final String PATH;
     private List<Appliance> Appliances;
     private DocumentBuilder DocumentBuilder;
 
+    /**
+     * Initialize instance of class ApplianceDAOImpl.
+     */
     public ApplianceDAOImpl() {
         this.PATH = "src/main/resources/ApplianceInfo.xml";
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -67,6 +73,12 @@ public class ApplianceDAOImpl implements ApplianceDAO {
         return root.getChildNodes();
     }
 
+    /**
+     *
+     * @param category - name of appliance category looking for.
+     * @return appliances founded.
+     * @throws ApplianceException - if there are mistakes while finding appliances
+     */
     @Override
     public List<Appliance> findByCategory(String category) throws ApplianceException {
         if (this.Appliances == null) {
@@ -78,6 +90,11 @@ public class ApplianceDAOImpl implements ApplianceDAO {
                 toList();
     }
 
+    /**
+     *
+     * @return appliances founded.
+     * @throws ApplianceException - if there are mistakes while finding appliances.
+     */
     @Override
     public List<Appliance> findCheapest() throws ApplianceException {
         if (this.Appliances == null) {
