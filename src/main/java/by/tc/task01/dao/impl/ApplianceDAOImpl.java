@@ -3,7 +3,6 @@ package by.tc.task01.dao.impl;
 import by.tc.task01.dao.ApplianceDAO;
 import by.tc.task01.dao.impl.exceptions.ApplianceException;
 import by.tc.task01.entity.*;
-import by.tc.task01.entity.criteria.Criteria;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,48 +15,21 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ApplianceDAOImpl implements ApplianceDAO {
 
-    private final String Path;
+    private final String PATH;
     private List<Appliance> Appliances;
     private DocumentBuilder DocumentBuilder;
 
     public ApplianceDAOImpl() {
-        this.Path = "ApplianceInfo.xml";
+        this.PATH = "src/main/resources/ApplianceInfo.xml";
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             this.DocumentBuilder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
-    }
-
-    private Boolean haveProperty(Map<String, Object> applianceProperties, Map.Entry<String, Object> criteriaProp) {
-        for (var property : applianceProperties.entrySet()) {
-            if (property.getKey() == criteriaProp.getKey() &&
-                    property.getClass().toString() == criteriaProp.getValue().toString()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private Boolean isSameAppliance(Appliance appliance, Criteria criteria) {
-        if (appliance.getClass().toString() == criteria.getGroupSearchName()) {
-            for (var criteriaProp : criteria.getCriteria().entrySet()) {
-                var haveValue = haveProperty(appliance.getProperties(), criteriaProp);
-                if (!haveValue) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
     private void LoadAppliance() throws ApplianceException {
@@ -82,51 +54,49 @@ public class ApplianceDAOImpl implements ApplianceDAO {
         Document document;
         Element root;
         try {
-            document = this.DocumentBuilder.parse(this.Path);
+            document = this.DocumentBuilder.parse(this.PATH);
             root = document.getDocumentElement();
         } catch (IOException e) {
-            System.err.printf("Error while reading file %s. %s%n", this.Path, e.getMessage());
-            throw new ApplianceException("Error while reading file %s. %s%n" + this.Path, e);
+            System.err.printf("Error while reading file %s. %s%n", this.PATH, e.getMessage());
+            throw new ApplianceException("Error while reading file %s. %s%n" + this.PATH, e);
         } catch (SAXException e) {
-            System.err.printf("Error while parsing file %s. %s%n", this.Path, e.getMessage());
-            throw new ApplianceException("Error while parsing file %s. %s%n" + this.Path, e);
+            System.err.printf("Error while parsing file %s. %s%n", this.PATH, e.getMessage());
+            throw new ApplianceException("Error while parsing file %s. %s%n" + this.PATH, e);
         }
 
         return root.getChildNodes();
     }
 
     @Override
-    public Appliance find(Criteria criteria) throws ApplianceException {
+    public List<Appliance> findByCategory(String category) throws ApplianceException {
         if (this.Appliances == null) {
             LoadAppliance();
         }
 
-        var appliances = findAll(criteria);
-        if (appliances.size() > 0) {
-            return appliances.get(0);
-        } else {
-            throw new ApplianceException("no appliance found");
-        }
+        return this.Appliances.stream().
+                filter(appliance -> appliance.getClass().getSimpleName().equals(category)).
+                toList();
     }
 
     @Override
-    public Appliance findCheapest(int price) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Appliance> findAll(Criteria criteria) throws ApplianceException {
+    public List<Appliance> findCheapest() throws ApplianceException {
         if (this.Appliances == null) {
             LoadAppliance();
         }
 
-        var appliances = new ArrayList<Appliance>();
-        for (var appliance : this.Appliances) {
-            if (isSameAppliance(appliance, criteria)) {
-                appliances.add(appliance);
+        var list = new ArrayList<Appliance>();
+        int smallerPrice = Integer.MAX_VALUE;
+        for (var appliance : this.Appliances){
+            if (smallerPrice > appliance.getPrice()){
+                smallerPrice = appliance.getPrice();
+                list = new ArrayList<Appliance>();
+                list.add(appliance);
+            }
+            else if (smallerPrice == appliance.getPrice()){
+                list.add(appliance);
             }
         }
 
-        return appliances;
+        return list;
     }
 }

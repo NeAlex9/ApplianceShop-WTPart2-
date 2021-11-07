@@ -34,13 +34,14 @@ public class Oven extends Appliance {
     }
 
     @Override
-    public Map<String, Object> getProperties() {
-        var properties = new HashMap<String, Object>();
-        properties.put("CAPACITY", this.Capacity);
-        properties.put("DEPTH", this.Depth);
-        properties.put("HEIGHT", this.Height);
-        properties.put("WIDTH", this.Width);
-        properties.put("PRICE", this.Price);
-        return properties;
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Oven{");
+        sb.append("price = ").append(this.getPrice());
+        sb.append(", capacity = ").append(this.getCapacity());
+        sb.append(", depth = ").append(this.getDepth());
+        sb.append(", width = ").append(this.getWidth());
+        sb.append(", height = ").append(this.getHeight());
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -15,12 +15,13 @@ public class Laptop extends Appliance {
     }
 
     @Override
-    public Map<String, Object> getProperties() {
-        var properties = new HashMap<String, Object>();
-        properties.put("PRICE", this.Price);
-        properties.put("SYSTEM_MEMORY", this.SystemMemory);
-        properties.put("CPU", this.Cpu);
-        return properties;
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Laptop{");
+        sb.append("price = ").append(this.getPrice());
+        sb.append(", system memory = ").append(this.getSystemMemory());
+        sb.append(", cpu = ").append(this.getCpu());
+        sb.append('}');
+        return sb.toString();
     }
 
     public int getSystemMemory() {

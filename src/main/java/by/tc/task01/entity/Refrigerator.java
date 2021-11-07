@@ -3,10 +3,11 @@ package by.tc.task01.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Refrigerator extends Appliance{ //OVERALL_CAPACITY, HEIGHT, WIDTH, PRICE
+public class Refrigerator extends Appliance {
     private int OverallCapacity;
     private int Height;
     private int Width;
+
     public Refrigerator(int price, int overallCapacity, int height, int width) {
         super(price);
         this.Height = height;
@@ -27,12 +28,13 @@ public class Refrigerator extends Appliance{ //OVERALL_CAPACITY, HEIGHT, WIDTH, 
     }
 
     @Override
-    public Map<String, Object> getProperties() {
-        var properties = new HashMap<String, Object>();
-        properties.put("PRICE", this.Price);
-        properties.put("HEIGHT", this.Height);
-        properties.put("WIDTH", this.Width);
-        properties.put("OVERALL_CAPACITY", this.OverallCapacity);
-        return properties;
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Refrigerator{");
+        sb.append("price = ").append(this.getPrice());
+        sb.append(", overall capacity = ").append(this.getOverallCapacity());
+        sb.append(", width = ").append(this.getWidth());
+        sb.append(", height = ").append(this.getHeight());
+        sb.append('}');
+        return sb.toString();
     }
 }
