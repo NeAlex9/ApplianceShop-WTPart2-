@@ -33,9 +33,9 @@ public class ApplianceServiceImpl implements ApplianceService{
 	}
 
 	/**
-	 *
-	 * @return
-	 * @throws ApplianceException
+	 * find the cheapest appliance.
+	 * @return the cheapest appliances.
+	 * @throws ApplianceException whether no appliance was found.
 	 */
 	@Override
 	public List<Appliance> findCheapest() throws ApplianceException {

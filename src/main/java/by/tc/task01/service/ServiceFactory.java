@@ -2,6 +2,9 @@ package by.tc.task01.service;
 
 import by.tc.task01.service.impl.ApplianceServiceImpl;
 
+/**
+ * class to get service instance.
+ */
 public final class ServiceFactory {
 	private static final ServiceFactory instance = new ServiceFactory();
 
@@ -9,11 +12,19 @@ public final class ServiceFactory {
 	
 	private ServiceFactory() {}
 
+	/**
+	 * gets appliance service instance.
+	 * @return appliance service instance.
+	 */
 	public ApplianceService getApplianceService() {
 
 		return applianceService;
 	}
 
+	/**
+	 * gets service factory instance.
+	 * @return service factory instance.
+	 */
 	public static ServiceFactory getInstance() {
 		return instance;
 	}
