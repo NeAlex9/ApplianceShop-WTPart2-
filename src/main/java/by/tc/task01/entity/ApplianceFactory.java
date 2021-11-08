@@ -16,7 +16,8 @@ public class ApplianceFactory {
     private static final ApplianceFactory instance = new ApplianceFactory();
 
     /**
-     * The constant instance.
+     * gets appliance factory.
+     * @return appliance factory.
      */
     public static ApplianceFactory getInstance() {
         return instance;

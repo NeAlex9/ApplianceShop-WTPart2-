@@ -6,6 +6,9 @@ import by.tc.task01.entity.Appliance;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * interface for appliance service.
+ */
 public interface ApplianceService {
 	/**
 	 * gets all appliances satisfy category.

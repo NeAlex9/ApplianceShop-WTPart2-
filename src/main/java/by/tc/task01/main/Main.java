@@ -9,6 +9,10 @@ import by.tc.task01.service.ServiceFactory;
 
 public class Main {
 
+    /**
+     * entry point.
+     * @param args
+     */
     public static void main(String[] args) {
 
         ServiceFactory factory = ServiceFactory.getInstance();

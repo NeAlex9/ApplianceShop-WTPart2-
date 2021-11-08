@@ -11,7 +11,7 @@ public abstract class Appliance {
 
     /**
      * Initialize fields.
-     * @param price
+     * @param price param describes appliance price.
      */
     public Appliance(int price){
         this.setPrice(price);
